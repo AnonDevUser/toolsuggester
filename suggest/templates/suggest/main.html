@@ -1,0 +1,85 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="{% static 'images/logo.png' %}" type="image/png" />
+  <title>StuSuggest</title>
+  <link rel="stylesheet" href="{% static 'style.css' %}" />
+</head>
+<body>
+    <div class="container">
+      <div class="left-panel">
+        <img src="{% static '/images/logo.png' %}" alt="StuClub Logo" class="logo" />
+        <h1>StuSuggest</h1>
+        <p class="tagline">AI tool suggestor</p>
+      </div>
+      <div class="right-panel">
+        <div class="login-box">
+         <h1> Who are you? </h1>
+        <form method="post">
+        {% csrf_token %}
+        <div class="input-group">
+        <label for="Role">Choose your role</label>
+        <select name="role" id="select_role" required>
+        <option value="" selected disabled>-- Role --</option>
+        <optgroup label="Students & Education">
+            <option value="std">Student</option>
+            <option value="hstd">High School Student</option>
+            <option value="cstd">College Student</option>
+            <option value="unir">University Researcher</option>
+            <option value="phdr">PhD Researcher</option>
+            <option value="teachlect">Teacher / Lecturer</option>
+            <option value="edutrain">Educator / Trainer</option>
+        </optgroup>
+        <optgroup label="Developers & Tech">
+            <option value="sfed">Software Engineer / Developer</option>
+            <option value="fed">Frontend Developer</option>
+            <option value="bed">Backend Developer</option>
+            <option value="fsd">Full Stack Developer</option>
+            <option value="s">Data Scientist</option>
+            <option value="aie">AI/ML engineer</option>
+            <option value="devops">DevOps Engineer</option>
+            <option value="pmt">Product Manager (tech)</option>
+      </optgroup>
+      <optgroup label="Creative & Design">
+          <option value="gde">Graphic Designer</option>
+          <option value="uide">UI/UX Designer</option>
+          <option value="ved">Video Editor</option>
+          <option value="ani">Animator</option>
+          <option value="3dmod">3D Artist / Modeler</option>
+          <option value="wriauger">Writer / Author / Blogger</option>
+          <option value="cc">Content Creator / Social Media Creator</option>
+      </optgroup>
+      <optgroup label="Marketing & Business">
+          <option value="dm">Digital Marketer</option>
+          <option value="seospe">SEO Specialist</option>
+          <option value="smm">Social Media Manager</option>
+          <option value="sales">Salesperson / Account Manager</option>
+          <option value="ent">Entrepreneur / Startup Founder</option>
+          <option value="busanaly">Business Analyst / Consultant</option>
+          <option value="pmg">Project Manager</option>
+    </optgroup>
+    <optgroup label="Everyday / Productivity">
+        <option value="researcac">Researcher / Academic</option>
+        <option value="freegig">Freelancer / Gig Worker</option>
+        <option value="offad">Office Worker / Admin</option>
+        <option value="passist">Personal Assistant / Executive Assistant</option>
+        <option value="bloginf">Blogger / Influencer</option>
+</optgroup>
+    </select>
+    <br>
+    
+    <label for="Requirements">Requirements</label>
+    <input type="text" id="req" name="urreq" placeholder="specific requirements" oninput="limitWords(this, 8)">
+    <div id="wordCountMessage"></div>
+    </div>
+    <button type="submit" class="learn-btn">Find tools</button>
+  </form>
+  </div>
+</div>
+</div>
+<script src="{% static 'script.js' %}" defer></script>
+</body>
+</html>
