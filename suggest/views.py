@@ -99,6 +99,7 @@ def suggest_output(request):
             messages=[{"role": "user", "content": prompt}]
         )
         result = response.choices[0].message.content
+        result = result.replace("“", '"').replace("”", '"')
         try:
             result = json.loads(result)
         except json.JSONDecodeError:
