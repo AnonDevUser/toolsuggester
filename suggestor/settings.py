@@ -41,6 +41,13 @@ ALLOWED_HOSTS = (
 
 
 # Application definition
+STATIC_URL = "/static/"
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),  # your local static folder
+]
+
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")  # for collectstatic on deploy
 
 INSTALLED_APPS = [
     'suggest',
