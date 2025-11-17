@@ -70,7 +70,7 @@ python manage.py runserver
 `DJANGO_ALLOWED_HOSTS`: Comma-separated list of allowed hosts
 ## 📦 Folder Structure
 ```bash
-toolsuggestor/
+toolsuggester/
 │
 ├─ suggest/            # Django app
 │  ├─ templates/       # HTML templates
@@ -86,7 +86,7 @@ toolsuggestor/
 
 ## 🌐 Keywords
 
-AI tool suggestion, Groq AI, student productivity tools, developer AI tools, teacher AI tools, AI recommendations platform, StuSuggestor, AI tool finder, Django AI app
+AI tool suggestion, Groq AI, student productivity tools, developer AI tools, teacher AI tools, AI recommendations platform, StuSuggester, AI tool finder, Django AI app
 
 ## 📄 License
 
