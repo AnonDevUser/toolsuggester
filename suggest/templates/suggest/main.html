@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="{% static 'style.css' %}" />
 </head>
 <body>
+{% if not result %}
     <div class="container">
       <div class="left-panel">
         <img src="{% static '/images/logo.png' %}" alt="StuClub Logo" class="logo" />
@@ -18,7 +19,7 @@
       <div class="right-panel">
         <div class="login-box">
          <h1> Who are you? </h1>
-        <form method="post">
+        <form action="{% url 'suggest_output' %}" method="post">
         {% csrf_token %}
         <div class="input-group">
         <label for="Role">Choose your role</label>
@@ -80,6 +81,33 @@
   </div>
 </div>
 </div>
+{% else %}
+<div class="container" style="flex-direction: column; text-align: center;">
+  <div class="abc title-with-logo" style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-top: 30px;">
+    <img src="{% static 'images/logo.png' %}" alt="StuClub Logo" class="logo" />
+    <h1>Suggestions for you</h1>
+  </div>
+  <div class="board-grid">
+  {% for tool in result %}
+    <div class="board-card">
+      <p>{{ tool.category }}</p>
+      <h1>{{ tool.name }}</h1>
+      <p>{{ tool.description }}</p>
+      {% if tool.website_url %}
+      <a class="url" href="{{ tool.website_url }}" target="_blank" rel="noopener noreferrer">{{ tool.website_url }}</a>
+      {% else %}
+      <span>No verified website provided.</span>
+      {% endif %}
+    </div>
+  {% endfor %}
+  </div>
+  <p class="tagline2">
+    Results for: {{ role }} - {{ urreq }} <br>
+    If you have any questions about these terms, feel free to reach out to us at <a href="mailto:support@stuclub.xyz" style="color: #9ed0f8;">support@stuclub.xyz</a>.
+  </p>
+</div>
+
+{% endif %}
 <script src="{% static 'script.js' %}" defer></script>
 </body>
 </html>

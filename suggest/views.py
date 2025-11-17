@@ -1,9 +1,123 @@
+from filecmp import DEFAULT_IGNORES
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from dotenv import load_dotenv
+from urllib.parse import urlparse
+load_dotenv()
 import json
 import re
+import os
+from groq import Groq
+
+SAFE_URL_SCHEMES = {"http", "https"}
 # Create your views here.
 def Index(request):
+    return render(request, "suggest/main.html")
+
+def sanitize_text(value: str, max_length: int = 200) -> str:
+    if not value:
+        return ""
+    cleaned = re.sub(r"[^a-zA-Z0-9 ,.\-?!]", "", value)
+    return cleaned[:max_length]
+
+
+def sanitize_tools(tools):
+    if not isinstance(tools, list):
+        return []
+    sanitized = []
+    for tool in tools:
+        if not isinstance(tool, dict):
+            continue
+        website = tool.get("website_url", "")
+        parsed = urlparse(website) if website else None
+        if not parsed or parsed.scheme.lower() not in SAFE_URL_SCHEMES:
+            tool = {**tool, "website_url": ""}
+        sanitized.append(tool)
+    return sanitized
+
+
+def suggest_output(request):
+    if request.method == "POST":
+        ROLE_MAP = {
+        "std": "Student",
+        "hstd": "High School Student",
+        "cstd": "College Student",
+        "unir": "University Researcher",
+        "phdr": "PhD Researcher",
+        "teachlect": "Teacher / Lecturer",
+        "edutrain": "Educator / Trainer",
+        "sfed": "Software Engineer / Developer",
+        "fed": "Frontend Developer",
+        "bed": "Backend Developer",
+        "fsd": "Full Stack Developer",
+        "s": "Data Scientist",
+        "aie": "AI/ML Engineer",
+        "devops": "DevOps Engineer",
+        "pmt": "Product Manager (Tech)",
+        "gde": "Graphic Designer",
+        "uide": "UI/UX Designer",
+        "ved": "Video Editor",
+        "ani": "Animator",
+        "3dmod": "3D Artist / Modeler",
+        "wriauger": "Writer / Author / Blogger",
+        "cc": "Content Creator / Social Media Creator",
+        "dm": "Digital Marketer",
+        "seospe": "SEO Specialist",
+        "smm": "Social Media Manager",
+        "sales": "Salesperson / Account Manager",
+        "ent": "Entrepreneur / Startup Founder",
+        "busanaly": "Business Analyst / Consultant",
+        "pmg": "Project Manager",
+        "researcac": "Researcher / Academic",
+        "freegig": "Freelancer / Gig Worker",
+        "offad": "Office Worker / Admin",
+        "passist": "Personal Assistant / Executive Assistant",
+        "bloginf": "Blogger / Influencer",
+        }
+        role = ROLE_MAP.get(request.POST.get("role")) or "General User"
+        urreq = request.POST.get("urreq", "")
+        safe_requirements = sanitize_text(urreq)
+        client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+        prompt = f"""
+        You are an AI tool expert who suggests best tools that can be used together.
+        Role: {role}
+        Requirements: {safe_requirements}
+        Recommend 6 AI tools in JSON format with fiedlds, name, description, image url, website url, and category.
+        Example:
+        [
+            {{
+                "name": "Tool 1",
+                "description": "Description of Tool 1",
+                "image_url": "https://www.tool1.com/image.png",
+                "website_url": "https://www.tool1.com",
+                "category": "Category 1"
+            }}
+        ]
+        Return only the JSON array, no other text or formatting.
+        """
+
+        response = client.chat.completions.create(
+            model="llama-3.1-8b-instant",
+            messages=[{"role": "user", "content": prompt}]
+        )
+        result = response.choices[0].message.content
+        try:
+            result = json.loads(result)
+        except json.JSONDecodeError:
+             json_text = re.search(r"\[.*\]", result, re.DOTALL)
+             result = json.loads(json_text.group()) if json_text else []
+
+        result = sanitize_tools(result)
+
+        return render(
+            request,
+            "suggest/main.html",
+            {
+                "result": result,
+                "role": role,
+                "urreq": safe_requirements,
+            },
+        )
     return render(request, "suggest/main.html")
