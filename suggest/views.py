@@ -77,23 +77,31 @@ def suggest_output(request):
         safe_requirements = sanitize_text(urreq)
         client = Groq(api_key=os.getenv("GROQ_API_KEY"))
         prompt = f"""
-        You are an AI tool expert who suggests best tools that can be used together.
-        Role: {role}
-        Requirements: {safe_requirements}
-        Recommend 6 AI tools in JSON format with fiedlds, name, description, image url, website url, and category.
-        Example:
-        [
-            {{
-                "name": "Tool 1",
-                "description": "Description of Tool 1",
-                "image_url": "https://www.tool1.com/image.png",
-                "website_url": "https://www.tool1.com",
-                "category": "Category 1"
-            }}
-        ]
-        Return only the JSON array, no other text or formatting.
-        """
+                    You are an AI tool recommendation expert. Suggest 6 AI tools that can be used together, 
+                    specifically tailored to the user's requirements.
 
+                    User Role: {role}
+                    Requirements: {safe_requirements}
+
+                    Instructions:
+                    - Return exactly 6 tools.
+                    - Each tool must be a JSON object with these fields: 
+                    "name", "description", "image_url", "website_url", "category".
+                    - The "description" must be concise: no more than 15 words.
+                    - Do not include any extra text, commentary, or explanation.
+                    - Return a valid JSON array only.
+
+                    Example output:
+                    [
+                        {{
+                            "name": "Tool 1",
+                            "description": "Short description under 15 words",
+                            "image_url": "https://www.tool1.com/image.png",
+                            "website_url": "https://www.tool1.com",
+                            "category": "Category 1"
+                        }}
+                    ]
+                    """
         response = client.chat.completions.create(
             model="llama-3.1-8b-instant",
             messages=[{"role": "user", "content": prompt}]
