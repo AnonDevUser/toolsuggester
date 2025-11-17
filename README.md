@@ -1,6 +1,6 @@
-# StuSuggestor – AI Tool Suggestor for Students and Professionals
+# StuSuggester – AI Tool Suggester for Students and Professionals
 
-**StuSuggestor** is an AI-powered tool recommendation platform that helps students, educators, developers, and professionals discover the best AI tools tailored to their role and specific requirements. The platform leverages Groq’s AI API to generate curated suggestions in real-time, making it easy to find the right tools for productivity, coding, learning, and business.
+**StuSuggester** is an AI-powered tool recommendation platform that helps students, educators, developers, and professionals discover the best AI tools tailored to their role and specific requirements. The platform leverages Groq’s AI API to generate curated suggestions in real-time, making it easy to find the right tools for productivity, coding, learning, and business.
 
 
 
@@ -31,8 +31,8 @@ Follow these steps to clone and run the project locally.
 ### **1. Clone the repository**
 
 ```bash
-git clone git@github.com:AnonDevUser/toolsuggestor.git
-cd toolsuggestor
+git clone git@github.com:AnonDevUser/toolsuggester.git
+cd toolsuggester
 ```
 ### **2. Create a virtual environment**
 ```bash
