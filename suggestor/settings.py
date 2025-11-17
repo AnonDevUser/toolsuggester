@@ -33,12 +33,7 @@ SECRET_KEY = os.environ.get(
 DEBUG = os.environ.get("DJANGO_DEBUG", "True").lower() == "true"
 
 allowed_hosts_env = os.environ.get("DJANGO_ALLOWED_HOSTS", "")
-ALLOWED_HOSTS = (
-    [host.strip() for host in allowed_hosts_env.split(",") if host.strip()]
-    if allowed_hosts_env
-    else ["127.0.0.1", "localhost"]
-)
-
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
 
 # Application definition
 STATIC_URL = "/static/"
